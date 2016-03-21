@@ -15,3 +15,6 @@ This is the project repository for the course complex network.
   * Majority of people answer only one question, only a few answer a lot? 
   * Same pattern in out-degree?
 3.  What's the characteristic of people with different degrees of knowledge? e.g. expertise often answer questions for newbies? Or expertise? Assortativity?
+4.  Scores setting for expers, professionals, normal, learner and newbies
+  * Distribution
+  * characteristic? patterns of the questions asked by those people?
