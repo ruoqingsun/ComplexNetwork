@@ -5,8 +5,8 @@
 All data within one months: Q, A, timestamp, user ID, reached/badges/reputation.
 
 ##b. Questions to be solved
-i. In-degree, out-degree distribution
-ii. Assortativity: how experts, professionals and newbies are connected.
+* In-degree, out-degree distribution
+* Assortativity: how experts, professionals and newbies are connected.
 
 #2. Subgraph
 ##a. Data
