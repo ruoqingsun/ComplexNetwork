@@ -22,12 +22,12 @@ from_unixtime=calendar.timegm(from_day.timetuple())
 to_unixtime=calendar.timegm(to_day.timetuple())
 
 #get questions on March 1st, 2016
-
+#get questions with tag 'javascript'
 def questions():
     so = stackexchange.Site(stackexchange.StackOverflow, API_KEY)
     so.impose_throttling = True
     so.throttle_stop = False
-    Questions = so.questions(fromdate=from_unixtime,todate=to_unixtime,type=json).fetch()
+    Questions = so.questions(tagged=['javascript'], fromdate=from_unixtime,todate=to_unixtime,type=json).fetch()
     #pprint.pprint(dir(Questions))
 
     for each in Questions:
@@ -38,13 +38,27 @@ def questions():
         #questions={}
         #questions['']
         try:
-            cn_mdb.question.insert_one(each.json)
+            cn_mdb.javascript.insert_one(each.json)
         except Exception, e:
             print e
             continue
 
+#Record Unique question Ids and save into Mongodb
+def exportQuestionId():
+    questions = cn_mdb.javascript.find()
+    questionsId = []
+    for question in questions:
+        if question["question_id"] not in questionsId:
+            questionsId.append(question["question_id"])
+    print(questionsId)
+
+    try:
+        cn_mdb.questionsId.insert({"quesitonsId": questionsId})
+    except Exception, e:
+        print e
 
 questions()
+exportQuestionId()
 
 
 
