@@ -161,6 +161,15 @@ def edgesInfo():
     print num
     print error
 
+
+def exportUserLink():
+    users = cn_mdb.users.find()
+    links = []
+    for each_user in users:
+        if (each_user["link"]):
+            links.append(each_user["link"])
+    cn_mdb.userLinks.insert({"userLinks": links})
+
 #1. Crawl Questions
 #questions()
 #removeDul()
@@ -172,5 +181,8 @@ def edgesInfo():
 #users()
 
 #4. Extract graph edge for creating graph information into collectio200n "edgesInfo"
-edgesInfo()
+#edgesInfo()
+
+#5. Export user links to for furthur crawling
+exportUserLink()
 
