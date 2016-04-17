@@ -27,7 +27,7 @@ def questions():
     so = stackexchange.Site(stackexchange.StackOverflow, API_KEY)
     so.impose_throttling = True
     so.throttle_stop = False
-    Questions = so.questions(tagged=['javascript'], fromdate=from_unixtime,todate=to_unixtime,type=json).fetch()
+    Questions = so.questions(tagged=['groovy'], fromdate=from_unixtime,todate=to_unixtime,type=json).fetch()
     #pprint.pprint(dir(Questions))
 
     for each in Questions:
@@ -44,21 +44,18 @@ def questions():
             continue
 
 #Record Unique question Ids and save into Mongodb
-def exportQuestionId():
+def removeDul():
     questions = cn_mdb.javascript.find()
     questionsId = []
-    for question in questions:
-        if question["question_id"] not in questionsId:
-            questionsId.append(question["question_id"])
-    print(questionsId)
+    for each_ques in questions:
+        if each_ques["question_id"] not in questionsId:
+            questionsId.append(each_ques["question_id"])
+            cn_mdb.questions.insert_one(each_ques)
+    cn_mdb.questionsId.insert({"quesitonsId": questionsId})
 
-    try:
-        cn_mdb.questionsId.insert({"quesitonsId": questionsId})
-    except Exception, e:
-        print e
 
-questions()
-exportQuestionId()
+#questions()
+removeDul()
 
 
 
