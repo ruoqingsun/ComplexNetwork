@@ -184,5 +184,5 @@ def exportUserLink():
 #edgesInfo()
 
 #5. Export user links to for furthur crawling
-exportUserLink()
+#exportUserLink()
 
