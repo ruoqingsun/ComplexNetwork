@@ -42,4 +42,21 @@ def answerInterval():
             #print answer_interval
     cn_mdb.allAnswerIntervals.insert({"timeInterval": all_interval})
 
-answerInterval()
+def answer_count():
+    questions = cn_mdb.questions.find()
+    output=[]
+    jsonfile = open('answer_count.js', 'w')
+    for each_ques in questions:
+        temp={}
+        temp["question_id"]=each_ques["question_id"]
+        temp["answer_count"]=each_ques["answer_count"]
+        output.append(temp)
+    json.dump(output,jsonfile,indent=4)
+    jsonfile.close()
+
+answer_count()
+
+
+
+
+#answerInterval()
