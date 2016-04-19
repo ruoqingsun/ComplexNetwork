@@ -55,6 +55,7 @@ def answer_count():
     json.dump(output,jsonfile,indent=4)
     jsonfile.close()
 
+# answer distribution
 def st_answer():
     jsonfile = open('answer_count.json','r')
     data = json.load(jsonfile)
@@ -75,11 +76,25 @@ def st_answer():
         writer.writerow({"answer_counts":x, "num":counts_st[x]})
     csvfile.close()
 
-    #print uni_counts
-
-#answer_count()
-st_answer()
-
+#answer intervals distribution
+def answerIntervalst():
+    intervals = cn_mdb.allAnswerIntervals.find()
+    all_intervals = list(set(intervals[0]['timeInterval']))
+    interval_st=[0]*31
+    for each in intervals[0]['timeInterval']:
+        if each <=30:
+            interval_st[each]+=1
+    print interval_st
+    csvfile = open("answer_intervals_statistic.csv","w")
+    filednames=["day","num"]
+    writer=csv.DictWriter(csvfile,fieldnames=filednames)
+    writer.writeheader()
+    for x in range(31):
+        writer.writerow({"day":all_intervals[x],"num":interval_st[x]})
+    csvfile.close()
 
 
 #answerInterval()
+#answer_count()
+#st_answer()
+answerIntervalst()
