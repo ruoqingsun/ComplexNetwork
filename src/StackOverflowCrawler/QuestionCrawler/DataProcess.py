@@ -51,8 +51,8 @@ def answer_count():
         temp={}
         temp["question_id"]=each_ques["question_id"]
         temp["answer_count"]=each_ques["answer_count"]
-        #output.append(temp)
-        json.dump(output,jsonfile,indent=4)
+        output.append(temp)
+    json.dump(output,jsonfile,indent=4)
     jsonfile.close()
 
 def st_answer():
