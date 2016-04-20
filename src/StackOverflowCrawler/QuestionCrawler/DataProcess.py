@@ -2,6 +2,7 @@ from pymongo import MongoClient
 import datetime
 import calendar
 import json
+import csv
 
 
 API_KEY='JwPRMyfC9VTjKnaxe3h5Jg(('
@@ -45,7 +46,7 @@ def answerInterval():
 def answer_count():
     questions = cn_mdb.questions.find()
     output=[]
-    jsonfile = open('answer_count.js', 'w')
+    jsonfile = open('answer_count.json', 'w')
     for each_ques in questions:
         temp={}
         temp["question_id"]=each_ques["question_id"]
@@ -54,9 +55,46 @@ def answer_count():
     json.dump(output,jsonfile,indent=4)
     jsonfile.close()
 
-answer_count()
+# answer distribution
+def st_answer():
+    jsonfile = open('answer_count.json','r')
+    data = json.load(jsonfile)
+    counts = [each["answer_count"] for each in data]
+    uni_counts = list(set(counts))
+    counts_st = []
+    for x in range(14):
+        counts_st.append(0)
+    print counts_st
+    for each in data:
+        counts_st[each["answer_count"]]+=1
+    print counts_st
+    csvfile=open("answer_statistic.csv","w")
+    fieldnames = ['answer_counts', 'num']
+    writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+    writer.writeheader()
+    for x in range(14):
+        writer.writerow({"answer_counts":x, "num":counts_st[x]})
+    csvfile.close()
 
-
+#answer intervals distribution
+def answerIntervalst():
+    intervals = cn_mdb.allAnswerIntervals.find()
+    all_intervals = list(set(intervals[0]['timeInterval']))
+    interval_st=[0]*31
+    for each in intervals[0]['timeInterval']:
+        if each <=30:
+            interval_st[each]+=1
+    print interval_st
+    csvfile = open("answer_intervals_statistic.csv","w")
+    filednames=["day","num"]
+    writer=csv.DictWriter(csvfile,fieldnames=filednames)
+    writer.writeheader()
+    for x in range(31):
+        writer.writerow({"day":all_intervals[x],"num":interval_st[x]})
+    csvfile.close()
 
 
 #answerInterval()
+#answer_count()
+#st_answer()
+answerIntervalst()
