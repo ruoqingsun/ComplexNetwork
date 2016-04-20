@@ -93,8 +93,26 @@ def answerIntervalst():
         writer.writerow({"day":all_intervals[x],"num":interval_st[x]})
     csvfile.close()
 
+def accept_answer_st():
+    answers = cn_mdb.edges_info.find()
+    accpet_answers = [each for each in answers if each['Accepted']==True]
+    accept_time = list(set([each['ATime'] for each in accpet_answers]))
+    #print accept_time
+    accept_time_st=[0]* (max(accept_time)+1)
+    for each in accpet_answers:
+        accept_time_st[each['ATime']]+=1
+    #print accept_time_st
+    csvfile = open("accpet_answer_time_st.csv","w")
+    filednames=["day","num"]
+    writer=csv.DictWriter(csvfile,fieldnames=filednames)
+    writer.writeheader()
+    for x in range(len(accept_time_st)):
+        writer.writerow({"day":x,"num":accept_time_st[x]})
+    csvfile.close()
+
 
 #answerInterval()
 #answer_count()
 #st_answer()
-answerIntervalst()
+#answerIntervalst()
+accept_answer_st()
