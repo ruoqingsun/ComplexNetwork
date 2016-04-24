@@ -106,7 +106,7 @@ def accept_answer_st():
     filednames=["day","num"]
     writer=csv.DictWriter(csvfile,fieldnames=filednames)
     writer.writeheader()
-    for x in range(len(accept_time_st)):
+    for x in range(len(accpet_answers)):
         writer.writerow({"day":x,"num":accept_time_st[x]})
     csvfile.close()
 
