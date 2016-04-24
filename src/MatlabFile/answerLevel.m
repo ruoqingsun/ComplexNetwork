@@ -10,6 +10,6 @@ end
 figure
 plot(Percent)
 title('Time for getting an accepted answer distribution')
-xlabel('Questioner Level')
-ylabel('Answer Level')
-legend('Newbie','Learner','User','Professional','Export')
+xlabel('Answerer Level')
+ylabel('Percentage')
+legend('Newbie','Learner','User','Professional','Expert')
