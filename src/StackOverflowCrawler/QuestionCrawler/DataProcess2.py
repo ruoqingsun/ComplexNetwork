@@ -17,6 +17,8 @@ def answerGroup():
     answers = cn_mdb.edgesInfo.find()
     answer_group = [[0 for x in range(5)] for y in range(5)]
     for answer in answers:
+        if answer["Accepted"] == False:
+            continue
         qer = cn_mdb.usersInfo.find({ "id":  answer["QerId"]})
         aer = cn_mdb.usersInfo.find({ "id":  answer["AerId"]})
         try:
@@ -30,40 +32,17 @@ def answerGroup():
 
 
     try:
-        cn_mdb.answersGroup.insert({"answersGroup": answer_group})
+        cn_mdb.answersGroup.insert({"acceptedAnswersGroup": answer_group})
     except Exception, e:
         print e
-    # csvfile = open("answer_level.csv", "w")
-    # filednames = ["Newbie", "Learner", "User", "Professional", "Expert"]
-    # writer = csv.DictWriter(csvfile, fieldnames=filednames)
-    # writer.writeheader()
-    # for x in range(len(accept_time_st)):
-    #     writer.writerow({"Newbie": x[0], "Learner": x[1], "User": x[2], "Professional": x[3], "Expert": x[4]})
-    # csvfile.close()
-    # print answer_group
 
-    # print answers
-    # accpet_answers = [each for each in answers if each['Accepted']==True]
-    # accept_time = list(set([each['ATime'] for each in accpet_answers]))
-    # print accept_time
-    # accept_time_st=[0]* (max(accept_time)+1)
-    # for each in accpet_answers:
-    #     accept_time_st[each['ATime']]+=1
-    # #print accept_time_st
-    # csvfile = open("accpet_answer_time_st.csv","w")
-    # filednames=["day","num"]
-    # writer=csv.DictWriter(csvfile,fieldnames=filednames)
-    # writer.writeheader()
-    # for x in range(len(accept_time_st)):
-    #     writer.writerow({"day":x,"num":accept_time_st[x]})
-    # csvfile.close()
 
 def exportAnswerGroup():
     collection = cn_mdb.answersGroup.find()
-    answer_group = collection[0]["answersGroup"]
+    answer_group = collection[1]["acceptedAnswersGroup"]
     print answer_group
 
-    csvfile = open("answer_level.csv", "w")
+    csvfile = open("answer_accepted_level.csv", "w")
     filednames = ["Newbie", "Learner", "User", "Professional", "Expert"]
     writer = csv.DictWriter(csvfile, fieldnames=filednames)
     writer.writeheader()
