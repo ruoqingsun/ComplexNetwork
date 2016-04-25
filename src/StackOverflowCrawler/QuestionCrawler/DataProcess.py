@@ -117,9 +117,10 @@ def questioner_group():
     quer_ques=[]
     for each_question in questions:
         temp={}
+        #question
         try:
             qer = cn_mdb.userByReputation.find({ "id": each_question["owner"]["user_id"]})
-            print each_question["owner"]["user_id"]
+            #print each_question["owner"]["user_id"]
             if each_question["owner"]["user_id"] not in quers:
                 quers.append(each_question["owner"]["user_id"])
                 temp['level'] = qer[0]["level"]
@@ -162,10 +163,64 @@ def out_degree_group():
     csvfile.close()
     writer1.writerow({"Newbie": out_total[0], "Learner": out_total[1], "User": out_total[2], "Professional": out_total[3], "Expert": out_total[4]})
     csvfile1.close()
+
+def answer_group():
+    questions = cn_mdb.questions.find()
+    aers=[]
+    aer_answers=[]
+    for each_question in questions:
+        if each_question["answer_count"] >0:
+            for each_answer in each_question["answers"]:
+                temp={}
+                try:
+                    aer = cn_mdb.userByReputation.find({ "id": each_answer["owner"]["user_id"]})
+                    print each_answer["owner"]["user_id"]
+                    if each_answer["owner"]["user_id"] not in aers:
+                        aers.append(each_answer["owner"]["user_id"])
+                        temp['level'] = aer[0]["level"]
+                        temp['ques_count'] = 1
+                        aer_answers.append(temp)
+                    else:
+                        aer_find = aers.index(each_question["owner"]["user_id"])
+                        aer_answers[aer_find]['ques_count']+=1
+                except Exception:
+                    continue
+    print len(aers), len(aer_answers)
+    cn_mdb.in_degree_group.insert(aer_answers)
+
+def in_degree_group():
+    answers_group = cn_mdb.in_degree_group.find()
+    max_count = max([each["ques_count"] for each in answers_group])
+    in_group=[[0 for x in range(max_count)] for y in range(5)]
+    answers_group = cn_mdb.in_degree_group.find()
+    for each in answers_group:
+        in_group[each["level"]-1][each["ques_count"]-1]+=1
+    print in_group
+    in_total=[0 for x in range(5)]
+    for x in range(len(in_total)):
+        total=0
+        for y in range(len(in_group[x])):
+            total+=(in_group[x][y]*(y+1))
+        in_total[x]=total
+    print in_total
+    csvfile = open("in_degree_group.csv", "w")
+    csvfile1 = open("in_degree_total.csv","w")
+    filednames = ["Newbie", "Learner", "User", "Professional", "Expert"]
+    writer = csv.DictWriter(csvfile, fieldnames=filednames)
+    writer.writeheader()
+    writer1 = csv.DictWriter(csvfile1, fieldnames=filednames)
+    writer1.writeheader()
+    for x in range(max_count):
+         writer.writerow({"Newbie": in_group[0][x], "Learner": in_group[1][x], "User": in_group[2][x], "Professional": in_group[3][x], "Expert": in_group[4][x]})
+    csvfile.close()
+    writer1.writerow({"Newbie": in_total[0], "Learner": in_total[1], "User": in_total[2], "Professional": in_total[3], "Expert": in_total[4]})
+    csvfile1.close()
 #answerInterval()
 #answer_count()
 #st_answer()
 #answerIntervalst()
 #accept_answer_st()
 #questioner_group()
-out_degree_group()
+#out_degree_group()
+#answer_group()
+in_degree_group()
