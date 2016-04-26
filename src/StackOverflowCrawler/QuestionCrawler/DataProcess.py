@@ -215,6 +215,27 @@ def in_degree_group():
     csvfile.close()
     writer1.writerow({"Newbie": in_total[0], "Learner": in_total[1], "User": in_total[2], "Professional": in_total[3], "Expert": in_total[4]})
     csvfile1.close()
+def in_out():
+    edges = cn_mdb.edges_info.find()
+    in_out_dis=[[0 for x in range(5)] for y in range(5)]
+    for each in edges:
+        print each['QerId'],each['AerId']
+        try:
+            qer = cn_mdb.userByReputation.find({ "id": each["QerId"]})
+            aer = cn_mdb.userByReputation.find({ "id": each["AerId"]})
+            print qer[0]['level'],aer[0]['level']
+            in_out_dis[qer[0]["level"]-1][aer[0]["level"]-1]+=1
+        except Exception:
+            continue
+    print in_out_dis
+    csvfile = open("in_out.csv", "w")
+    filednames = ["Newbie", "Learner", "User", "Professional", "Expert"]
+    writer = csv.DictWriter(csvfile, fieldnames=filednames)
+    writer.writeheader()
+    for x in range(len(in_out_dis)):
+        writer.writerow({"Newbie": in_out_dis[x][0], "Learner": in_out_dis[x][1], "User": in_out_dis[x][2], "Professional": in_out_dis[x][3], "Expert": in_out_dis[x][4]})
+    csvfile.close()
+
 #answerInterval()
 #answer_count()
 #st_answer()
@@ -223,4 +244,5 @@ def in_degree_group():
 #questioner_group()
 #out_degree_group()
 #answer_group()
-in_degree_group()
+#in_degree_group()
+in_out()
