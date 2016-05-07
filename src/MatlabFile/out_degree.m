@@ -14,7 +14,7 @@ ax.YTickLabel = {'0%','50%','100%','150%','200%','250%'};
 xlabel('Question Number')
 ylabel('Questioner Number Proportion')
 legend('Newbie','Learner','User','Professional','Expert','Location','northoutside','Orientation','horizontal')
-title('Question Distribution By different Level of user')
+title('Question Distribution By User Level')
 % hold on;
 %     mark={'-b','-c','-m','-r','-k'};
 %     for i=1:5
