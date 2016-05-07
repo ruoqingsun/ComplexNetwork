@@ -53,5 +53,109 @@ def exportAnswerGroup():
     # for x in range(len(answer_group)):
     #     print answer_group[x][1]
 
+def exportEdgeInfo():
+    collection = cn_mdb.edgesInfo.find()
+    edges = [];
+    edges_innode = []
+    edges_outnode = []
+    weights = [];
+    csvfile = open("digraph_edges.csv", "w")
+    filednames = ["In", "Out", "Weight"]
+    writer = csv.DictWriter(csvfile, fieldnames=filednames)
+    writer.writeheader()
+    for edge in collection:
+        temp = str(edge["QerId"])+str(edge["AerId"])
+        if temp in edges:
+            weights[edges.index(temp)] = weights[edges.index(temp)] + 1
+            print edges.index(temp)
+        else:
+            edges.append(temp)
+            edges_innode.append(edge["QerId"])
+            edges_outnode.append(edge["AerId"])
+            weights.append(1)
+
+    for i in range(len(edges)):
+        writer.writerow({"In": edges_innode[i], "Out": edges_outnode[i], "Weight": weights[i]})
+
+    csvfile.close()
+
+def exportNodeWeights():
+    collection = cn_mdb.edgesInfo.find();
+    nodes = [];
+    nodes_in = [];
+    nodes_out = [];
+    csvfile = open("digraph_nodes_weights.csv", "w")
+    filednames = ["Node", "In_weight", "Out_weight"]
+    writer = csv.DictWriter(csvfile, fieldnames=filednames)
+    writer.writeheader()
+    for edge in collection:
+        if edge["QerId"] in nodes:
+            nodes_out[nodes.index(edge["QerId"])] = nodes_out[nodes.index(edge["QerId"])] + 1
+        else:
+            nodes.append(edge["QerId"])
+            nodes_in.append(0)
+            nodes_out.append(1)
+
+        if edge["AerId"] in nodes:
+            nodes_in[nodes.index(edge["AerId"])] = nodes_in[nodes.index(edge["AerId"])] + 1
+        else:
+            nodes.append(edge["AerId"])
+            nodes_in.append(1)
+            nodes_out.append(0)
+
+
+    for i in range(len(nodes)):
+        writer.writerow({"Node": nodes[i], "In_weight": nodes_in[i], "Out_weight": nodes_out[i]})
+    csvfile.close()
+
+def exportNodeWeightsSize():
+    collection = cn_mdb.edgesInfo.find();
+    nodes = [];
+    nodes_in = [];
+    nodes_out = [];
+    csvfile = open("digraph_weights_combination.csv", "w")
+    filednames = ["In-degree", "Out-degree", "Weight"]
+    writer = csv.DictWriter(csvfile, fieldnames=filednames)
+    writer.writeheader()
+    for edge in collection:
+        if edge["QerId"] in nodes:
+            nodes_out[nodes.index(edge["QerId"])] = nodes_out[nodes.index(edge["QerId"])] + 1
+        else:
+            nodes.append(edge["QerId"])
+            nodes_in.append(0)
+            nodes_out.append(1)
+
+        if edge["AerId"] in nodes:
+            nodes_in[nodes.index(edge["AerId"])] = nodes_in[nodes.index(edge["AerId"])] + 1
+        else:
+            nodes.append(edge["AerId"])
+            nodes_in.append(1)
+            nodes_out.append(0)
+
+
+    in_weight = []
+    out_weight = []
+    combined = []
+    weights = []
+
+    for i in range(len(nodes)):
+        tmp = str(nodes_in[i]) + " " + str(nodes_out[i])
+
+        if tmp in combined:
+            weights[combined.index(tmp)] = weights[combined.index(tmp)]+1
+        else:
+            combined.append(tmp)
+            in_weight.append(nodes_in[i])
+            out_weight.append(nodes_out[i])
+            weights.append(1)
+
+    for i in range(len(combined)):
+        writer.writerow({"In-degree": in_weight[i], "Out-degree": out_weight[i], "Weight": weights[i]})
+    csvfile.close()
+
 #answerGroup()
-exportAnswerGroup()
+#exportAnswerGroup()
+#exportEdgeInfo()
+# exportNodeWeights()
+exportNodeWeightsSize()
+
