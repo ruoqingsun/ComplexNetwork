@@ -11,17 +11,39 @@ set(ax, 'Ylim', [0,3500])
 set(ax, 'YTick', [0:300:3500])
 title('answers distribution')
 
-hold on 
-ft = fittype( 'smoothingspline' )
+hold on
 
-[fitresult, gof] = fit( xData, yData, ft );
+ft = fittype( 'exp1' );
+opts = fitoptions( 'Method', 'NonlinearLeastSquares' );
+opts.Display = 'Off';
+opts.StartPoint = [4385.16468087357 -0.953468681261366];
 
-h = plot( fitresult);
+% Fit model to data.
+[fitresult, gof] = fit( xData, yData, ft, opts );
+
+% Plot fit with data.
+h = plot( fitresult, xData, yData );
 legend( h, 'questionNum vs. answerNum', 'answer-dis', 'Location', 'NorthEast' );
 % Label axes
 xlabel('number of answers')
 ylabel('number of questions')
- hold off
+
+
+
+
+
+
+% hold on 
+% ft = fittype( 'smoothingspline' )
+%  
+% [fitresult, gof] = fit( xData, yData, ft );
+%  
+% h = plot( fitresult);
+% legend( h, 'questionNum vs. answerNum', 'answer-dis', 'Location', 'NorthEast' );
+% % Label axes
+% xlabel('number of answers')
+% ylabel('number of questions')
+% hold off
 
 
 
