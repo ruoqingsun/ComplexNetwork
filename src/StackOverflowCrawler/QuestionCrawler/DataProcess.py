@@ -236,6 +236,32 @@ def in_out():
         writer.writerow({"Newbie": in_out_dis[x][0], "Learner": in_out_dis[x][1], "User": in_out_dis[x][2], "Professional": in_out_dis[x][3], "Expert": in_out_dis[x][4]})
     csvfile.close()
 
+def first_day_question():
+    questions = cn_mdb.questions.find()
+    ques_min = [ 0 for x in range(24*60)]
+    for each_ques in questions:
+        minute = (each_ques['creation_date'] - from_unixtime)/60
+        ques_min[minute]+=1
+    print ques_min
+    csvfile = open("ques_min.csv", "w")
+    writer = csv.writer(csvfile, quoting=csv.QUOTE_NONE)
+    writer.writerow(ques_min)
+
+def first_day_answer():
+    questions = cn_mdb.questions.find()
+    answer_min = [0 for x in range(24*60)]
+    for each_ques in questions:
+        if each_ques['answer_count'] > 0:
+            for each_answer in each_ques['answers']:
+                if each_answer['creation_date'] < to_unixtime:
+                    minute = (each_answer['creation_date'] - from_unixtime)/60
+                    answer_min[minute]+=1
+    print answer_min
+    csvfile = open("answer_min.csv", "w")
+    writer = csv.writer(csvfile, quoting=csv.QUOTE_NONE)
+    writer.writerow(answer_min)
+
+
 #answerInterval()
 #answer_count()
 #st_answer()
@@ -245,4 +271,6 @@ def in_out():
 #out_degree_group()
 #answer_group()
 #in_degree_group()
-in_out()
+#in_out()
+#first_day_question()
+first_day_answer()
