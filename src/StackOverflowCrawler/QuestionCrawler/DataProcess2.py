@@ -153,9 +153,40 @@ def exportNodeWeightsSize():
         writer.writerow({"In-degree": in_weight[i], "Out-degree": out_weight[i], "Weight": weights[i]})
     csvfile.close()
 
+def ReputationAndAnswerInterval():
+    collection = cn_mdb.javascript.find();
+    timeInterval = []
+    reputation = []
+    for question in collection:
+        try:
+            question['owner']['reputation']
+            question['answers']
+        except Exception:
+            "Information Missed"
+        else:
+            if len(question['answers'])>0:
+                last_time = 0
+                answer_time=[]
+                for each_answer in question['answers']:
+                    if each_answer['is_accepted']==True:
+                        interval = (each_answer['creation_date']-question['creation_date'])/(60*60)
+                        timeInterval.append(interval)
+                        reputation.append(question['owner']['reputation'])
+
+    csvfile = open("reputation_answer_interval.csv", "w")
+    filednames = ["Reputation", "AnswerInverval"]
+    writer = csv.DictWriter(csvfile, fieldnames=filednames)
+    writer.writeheader()
+
+    for i in range(len(timeInterval)):
+        writer.writerow({"Reputation": reputation[i], "AnswerInverval": timeInterval[i]})
+    csvfile.close()
+
+
 #answerGroup()
 #exportAnswerGroup()
 #exportEdgeInfo()
 # exportNodeWeights()
-exportNodeWeightsSize()
+# exportNodeWeightsSize()
+ReputationAndAnswerInterval()
 
